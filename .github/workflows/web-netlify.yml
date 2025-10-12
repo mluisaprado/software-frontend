@@ -56,13 +56,11 @@ jobs:
       - name: Typecheck (opcional)
         run: npx tsc --noEmit || echo "Sin TypeScript o sin config"
 
-      # ✅ Expo SDK 49+ usa Metro: reemplaza `expo export:web` por `expo export`
       - name: Export web (Expo Web con Metro)
         run: npx expo export
         env:
           EXPO_PUBLIC_API_URL: ${{ env.EXPO_PUBLIC_API_URL }}
 
-      # ✅ El export genera por defecto una carpeta `dist/`
       - name: Publicar artefacto de build
         uses: actions/upload-artifact@v4
         with:
@@ -92,9 +90,9 @@ jobs:
           name: dist
           path: dist
 
-      # ✅ Usa versión correcta del action de Netlify (v2)
+      # ✅ Usa el action oficial correcto de Netlify CLI
       - name: Deploy con Netlify CLI
-        uses: netlify/actions/cli@v2
+        uses: netlify/actions/cli@main
         with:
           args: deploy --dir=dist --prod
         env:
@@ -125,9 +123,10 @@ jobs:
           path: dist
 
       - name: Deploy preview con Netlify CLI
-        uses: netlify/actions/cli@v2
+        uses: netlify/actions/cli@main
         with:
           args: deploy --dir=dist
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
