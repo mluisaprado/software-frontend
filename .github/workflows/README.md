@@ -28,16 +28,17 @@ Este pipeline automatiza la verificación y despliegue del proyecto usando GitHu
 
 ## ⚙️ Configuración Necesaria
 
-### Para Expo Publish (Recomendado):
+### Para EAS (Expo Application Services) - Recomendado:
 
 1. Crear cuenta en [Expo](https://expo.dev)
-2. Obtener token de acceso:
+2. Inicializar EAS:
    ```bash
    npx expo login
-   npx eas whoami
+   eas build:configure
    ```
-3. Ir a tu repositorio GitHub → **Settings** → **Secrets and variables** → **Actions**
-4. Crear secret: `EXPO_TOKEN` con tu token de Expo
+3. Obtener token en: https://expo.dev/accounts/[tu-usuario]/settings/access-tokens
+4. Ir a tu repositorio GitHub → **Settings** → **Secrets and variables** → **Actions**
+5. Crear secret: `EXPO_TOKEN` con tu token de Expo
 
 ### Para GitHub Pages (Alternativa para web):
 
@@ -75,6 +76,7 @@ Push/PR → Lint → Build + Test → Deploy (solo main)
 - El despliegue es **automático** solo en la rama `main`
 - Para deploys manuales, puedes ejecutar localmente:
   ```bash
-  npx expo publish
+  eas update --branch production --message "Deploy manual"
   ```
+- Requiere tener configurado `eas.json` (ya incluido en el proyecto)
 

@@ -99,12 +99,16 @@ jobs:
       - name: Instalar dependencias
         run: npm ci
 
-      - name: Instalar EAS CLI
-        run: npm install -g eas-cli
+      - name: Configurar Expo
+        uses: expo/expo-github-action@v8
+        with:
+          expo-version: latest
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
 
-      - name: Publicar a Expo
+      - name: Publicar actualización con EAS
         run: |
-          npx expo publish --non-interactive
+          eas update --branch production --message "Deploy automático desde GitHub Actions"
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
 

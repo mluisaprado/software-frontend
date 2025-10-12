@@ -36,26 +36,31 @@ El pipeline tiene **3 stages definidos**:
 
 ## ⚙️ Pasos para Activar el Despliegue Automatizado
 
-### Opción 1: Expo (Recomendado para apps móviles)
+### Opción 1: EAS (Expo Application Services) - Recomendado
 
 1. **Crear cuenta en Expo**
    - Ir a https://expo.dev
    - Crear cuenta gratuita
 
-2. **Obtener token de acceso**
+2. **Inicializar EAS en tu proyecto**
    ```bash
    npx expo login
-   npx expo whoami
+   eas build:configure
    ```
 
-3. **Configurar en GitHub**
+3. **Obtener token de acceso**
+   - Ir a https://expo.dev/accounts/[tu-usuario]/settings/access-tokens
+   - Click en **Create Token**
+   - Copiar el token generado
+
+4. **Configurar en GitHub**
    - Ir a tu repositorio → **Settings** → **Secrets and variables** → **Actions**
    - Click en **New repository secret**
    - Name: `EXPO_TOKEN`
-   - Value: Tu token de Expo
+   - Value: Pegar el token de Expo
    - Click **Add secret**
 
-4. **¡Listo!** Al hacer push a `main`, se desplegará automáticamente
+5. **¡Listo!** Al hacer push a `main`, se desplegará automáticamente con EAS Update
 
 ---
 
@@ -134,8 +139,8 @@ Desarrollador hace push
 Si no se configura automático, se puede desplegar manualmente:
 
 ```bash
-# Publicar a Expo
-npx expo publish
+# Publicar actualización con EAS
+eas update --branch production --message "Deploy manual"
 
 # O build para web
 npm run build:web
