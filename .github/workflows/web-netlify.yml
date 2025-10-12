@@ -1,14 +1,19 @@
 name: Web CI/CD (Expo Web → Netlify)
+
 on:
   push:
     branches: [main, develop]
   pull_request:
     branches: [main, develop]
-    
+
 env:
+  # URL pública de tu backend en Render
   EXPO_PUBLIC_API_URL: https://TU-BACKEND.onrender.com
 
 jobs:
+  # ==========================================================
+  # 1️⃣ LINT
+  # ==========================================================
   lint:
     name: 🔍 Lint
     runs-on: ubuntu-latest
@@ -21,8 +26,11 @@ jobs:
       - run: npm ci
       - run: npm run lint || echo "No hay script de lint"
 
+  # ==========================================================
+  # 2️⃣ BUILD WEB
+  # ==========================================================
   build:
-    name: 🏗️ Build Web
+    name: 🏗️ Build Web (Expo Metro)
     runs-on: ubuntu-latest
     needs: lint
     steps:
@@ -31,17 +39,29 @@ jobs:
         with:
           node-version: 18
           cache: npm
-      - run: npm ci
-      - run: npx tsc --noEmit || echo "Sin TypeScript o sin config"
-      - name: Export web (Expo Web con Metro)
-        run: npx expo export
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      # ✅ Instalar Expo CLI localmente (necesario para export)
+      - name: Instalar Expo CLI
+        run: npm install --global expo-cli
+
+      # ✅ Compilar la app web con Metro
+      - name: Export web (Expo Metro)
+        run: npx expo export --output-dir dist
         env:
           EXPO_PUBLIC_API_URL: ${{ env.EXPO_PUBLIC_API_URL }}
+
+      # ✅ Subir el artefacto para los siguientes jobs
       - uses: actions/upload-artifact@v4
         with:
           name: dist
           path: dist
 
+  # ==========================================================
+  # 3️⃣ DEPLOY PRODUCCIÓN (Netlify)
+  # ==========================================================
   deploy:
     name: 🚀 Deploy a Netlify (Producción)
     runs-on: ubuntu-latest
@@ -52,21 +72,32 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 18
+
+      # ✅ Descargar build generado
       - uses: actions/download-artifact@v4
         with:
           name: dist
           path: dist
 
-      # ✅ Instalar y usar Netlify CLI directamente
+      # ✅ Instalar Netlify CLI
       - name: Instalar Netlify CLI
         run: npm install -g netlify-cli
 
+      # ✅ Publicar a Netlify (sin usar config remota)
       - name: Deploy con Netlify CLI
-        run: netlify deploy --dir=dist --prod --site $NETLIFY_SITE_ID
+        run: |
+          netlify deploy --dir=dist --prod --site $NETLIFY_SITE_ID --build-command ""
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
 
+      # ✅ Mostrar URL del sitio publicado
+      - name: Mostrar URL final
+        run: echo "✅ Sitio publicado en: https://santiago-software.netlify.app"
+
+  # ==========================================================
+  # 4️⃣ DEPLOY PREVIEW (Develop / PR)
+  # ==========================================================
   deploy-preview:
     name: 🔁 Deploy Preview a Netlify (PR / Develop)
     runs-on: ubuntu-latest
@@ -77,16 +108,21 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 18
+
+      # ✅ Descargar build generado
       - uses: actions/download-artifact@v4
         with:
           name: dist
           path: dist
 
+      # ✅ Instalar Netlify CLI
       - name: Instalar Netlify CLI
         run: npm install -g netlify-cli
 
+      # ✅ Deploy de preview (sin ejecutar build remoto)
       - name: Deploy preview con Netlify CLI
-        run: netlify deploy --dir=dist --site $NETLIFY_SITE_ID
+        run: |
+          netlify deploy --dir=dist --site $NETLIFY_SITE_ID --build-command ""
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
