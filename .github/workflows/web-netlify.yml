@@ -70,13 +70,13 @@ jobs:
 
       - name: Deploy con Netlify CLI
         run: |
-          netlify deploy --dir=dist --prod --site $NETLIFY_SITE_ID --build-command ""
+          netlify deploy --dir=dist --prod --site $NETLIFY_SITE_ID
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
 
       - name: Mostrar URL final
-        run: echo "✅ Sitio publicado en:https://santiago-software.netlify.app"
+        run: echo "✅ Sitio publicado en https://santiago-software.netlify.app"
 
   deploy-preview:
     name: 🔁 Deploy Preview a Netlify (PR / Develop)
@@ -99,7 +99,7 @@ jobs:
 
       - name: Deploy preview con Netlify CLI
         run: |
-          netlify deploy --dir=dist --site $NETLIFY_SITE_ID --build-command ""
+          netlify deploy --dir=dist --site $NETLIFY_SITE_ID
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
