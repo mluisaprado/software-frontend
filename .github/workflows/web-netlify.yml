@@ -10,6 +10,9 @@ env:
   EXPO_PUBLIC_API_URL: https://TU-BACKEND.onrender.com
 
 jobs:
+  # ==========================================================
+  # 1️⃣ LINT
+  # ==========================================================
   lint:
     name: 🔍 Lint
     runs-on: ubuntu-latest
@@ -22,6 +25,9 @@ jobs:
       - run: npm ci
       - run: npm run lint || echo "No hay script de lint"
 
+  # ==========================================================
+  # 2️⃣ BUILD WEB
+  # ==========================================================
   build:
     name: 🏗️ Build Web (Expo Metro)
     runs-on: ubuntu-latest
@@ -49,6 +55,9 @@ jobs:
           name: dist
           path: dist
 
+  # ==========================================================
+  # 3️⃣ DEPLOY PRODUCCIÓN (Netlify)
+  # ==========================================================
   deploy:
     name: 🚀 Deploy a Netlify (Producción)
     runs-on: ubuntu-latest
@@ -78,6 +87,10 @@ jobs:
       - name: Mostrar URL final
         run: echo "✅ Sitio publicado en: https://santiago-software.netlify.app"
 
+
+  # ==========================================================
+  # 4️⃣ DEPLOY PREVIEW (Develop / PR)
+  # ==========================================================
   deploy-preview:
     name: 🔁 Deploy Preview a Netlify (PR / Develop)
     runs-on: ubuntu-latest
