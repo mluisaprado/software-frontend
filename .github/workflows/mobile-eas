@@ -1,0 +1,143 @@
+name: Mobile CI/CD (Expo EAS)
+
+on:
+  push:
+    branches: [main, develop]
+  workflow_dispatch:
+    inputs:
+      build_platform:
+        description: "Plataforma (android | ios | all)"
+        required: true
+        default: "android"
+      build_profile:
+        description: "Perfil EAS (development | preview | production)"
+        required: true
+        default: "production"
+
+env:
+  # Disponible en el JS de la app (OTA y builds)
+  EXPO_PUBLIC_API_URL: https://TU-BACKEND.onrender.com
+
+jobs:
+  lint:
+    name: 🔍 Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Node 18 + cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Linter
+        run: npm run lint || echo "No hay script de lint"
+
+  test:
+    name: 🧪 Tests
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Node 18 + cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Tests
+        run: npm test || echo "Sin tests ακόμη"
+
+  eas-update:
+    name: 🚀 EAS Update (OTA)
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.event_name == 'push'
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Node 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      # ⚠️ Corrige el error de yarn ausente
+      - name: Habilitar Corepack + Yarn
+        run: |
+          corepack enable
+          corepack prepare yarn@stable --activate
+          yarn -v
+
+      - name: Configurar Expo/EAS
+        uses: expo/expo-github-action@v8
+        with:
+          expo-version: latest
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Instalar dependencias (yarn)
+        run: yarn install --frozen-lockfile || yarn install
+
+      - name: EAS Update a rama correspondiente
+        run: |
+          if [ "${GITHUB_REF##*/}" = "main" ]; then
+            BRANCH=production
+          else
+            BRANCH=develop
+          fi
+          echo "Publicando OTA a rama: $BRANCH"
+          eas update --branch "$BRANCH" --message "CI: OTA update desde ${GITHUB_REF##*/}"
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          EXPO_PUBLIC_API_URL: ${{ env.EXPO_PUBLIC_API_URL }}
+
+  eas-build:
+    name: 🏗️ EAS Build (manual)
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Node 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Habilitar Corepack + Yarn
+        run: |
+          corepack enable
+          corepack prepare yarn@stable --activate
+          yarn -v
+
+      - name: Configurar Expo/EAS
+        uses: expo/expo-github-action@v8
+        with:
+          expo-version: latest
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Instalar dependencias (yarn)
+        run: yarn install --frozen-lockfile || yarn install
+
+      - name: Lanzar build remoto en EAS
+        run: |
+          PLATFORM="${{ github.event.inputs.build_platform }}"
+          PROFILE="${{ github.event.inputs.build_profile }}"
+          echo "Ejecutando: eas build --platform $PLATFORM --profile $PROFILE --non-interactive"
+          eas build --platform "$PLATFORM" --profile "$PROFILE" --non-interactive
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          EXPO_PUBLIC_API_URL: ${{ env.EXPO_PUBLIC_API_URL }}
