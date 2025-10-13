@@ -21,47 +21,47 @@ Este pipeline automatiza la verificación y despliegue del proyecto usando GitHu
 
 ### 4. **Deploy** 🚀
 - **Solo se ejecuta en rama `main`**
-- Publica automáticamente a producción
-- Opciones de despliegue:
-  - Expo Publish
-  - GitHub Pages (versión web)
+- Despliega automáticamente a Netlify
+- URL: https://santiago-software.netlify.app
+
+### 5. **Create Release** 📦
+- Crea automáticamente tag de Git
+- Genera release en GitHub con notas de cambios
+- Formato: `v2025.10.13-1430` (fecha + hora)
 
 ## ⚙️ Configuración Necesaria
 
-### Para EAS (Expo Application Services) - Recomendado:
+### Para Netlify (Deploy Web):
 
-1. Crear cuenta en [Expo](https://expo.dev)
-2. Inicializar EAS:
-   ```bash
-   npx expo login
-   eas build:configure
-   ```
-3. Obtener token en: https://expo.dev/accounts/[tu-usuario]/settings/access-tokens
+1. Crear cuenta en [Netlify](https://netlify.com)
+2. Crear un nuevo sitio desde el dashboard
+3. Obtener credenciales:
+   - **NETLIFY_AUTH_TOKEN**: Settings → User settings → Applications → Personal access tokens
+   - **NETLIFY_SITE_ID**: Site settings → General → Site details → Site ID
 4. Ir a tu repositorio GitHub → **Settings** → **Secrets and variables** → **Actions**
-5. Crear secret: `EXPO_TOKEN` con tu token de Expo
+5. Crear secrets:
+   - Name: `NETLIFY_AUTH_TOKEN` | Value: tu token
+   - Name: `NETLIFY_SITE_ID` | Value: tu site ID
 
-### Para GitHub Pages (Alternativa para web):
+## 📊 Scripts Disponibles
 
-1. Ir a **Settings** → **Pages**
-2. Source: **GitHub Actions**
-3. El pipeline desplegará automáticamente
-
-## 📊 Scripts Recomendados
-
-Agrega estos scripts a tu `package.json`:
+Ya configurados en `package.json`:
 
 ```json
 "scripts": {
-  "lint": "eslint .",
-  "test": "jest",
-  "build:web": "expo export --platform web"
+  "start": "expo start",
+  "web": "expo start --web",
+  "build:web": "expo export --platform web --output-dir dist",
+  "deploy": "netlify deploy --dir=dist --prod",
+  "lint": "tsc --noEmit",
+  "test": "echo \"Tests pendientes\" && exit 0"
 }
 ```
 
 ## 🚦 Flujo de Trabajo
 
 ```
-Push/PR → Lint → Build + Test → Deploy (solo main)
+Push/PR → Lint → Build + Test → Deploy a Netlify (solo main) → Create Release
 ```
 
 ## 🎯 Triggers
@@ -74,9 +74,17 @@ Push/PR → Lint → Build + Test → Deploy (solo main)
 
 - Si no tienes tests configurados, el pipeline continuará (no falla)
 - El despliegue es **automático** solo en la rama `main`
+- Cada deploy a producción crea automáticamente un **tag y release en GitHub**
+- El archivo `netlify.toml` configura Netlify para omitir el build (ya se hace en GitHub Actions)
 - Para deploys manuales, puedes ejecutar localmente:
   ```bash
-  eas update --branch production --message "Deploy manual"
+  npm run build:web
+  netlify deploy --dir=dist --prod
   ```
-- Requiere tener configurado `eas.json` (ya incluido en el proyecto)
+
+## 📦 Sistema de Releases
+
+- **Automático**: Cada push a `main` crea un release con formato `v2025.10.13-1430`
+- **Manual**: Usa el workflow "Crear Release Manual" en GitHub Actions
+- Ver más detalles en [RELEASES.md](../../RELEASES.md)
 

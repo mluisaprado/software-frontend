@@ -1,0 +1,90 @@
+name: Crear Release Manual
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Versión del release (ej: v1.0.0 o dejar vacío para auto)'
+        required: false
+        type: string
+      release_notes:
+        description: 'Notas del release (opcional)'
+        required: false
+        type: string
+
+jobs:
+  create-release:
+    name: 📦 Crear Release y Tag
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Obtener todo el historial
+
+      - name: Configurar Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Generar versión y crear tag
+        id: version
+        run: |
+          # Si no se proporcionó versión, generar automáticamente
+          if [ -z "${{ inputs.version }}" ]; then
+            VERSION="v$(date +'%Y.%m.%d')-$(date +'%H%M')"
+          else
+            VERSION="${{ inputs.version }}"
+          fi
+          
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "📦 Creando release: $VERSION"
+          
+          # Crear tag
+          git tag -a $VERSION -m "Release $VERSION"
+          git push origin $VERSION
+
+      - name: Generar notas de release
+        id: notes
+        run: |
+          # Obtener último tag
+          LAST_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          
+          # Generar lista de commits
+          if [ -z "$LAST_TAG" ]; then
+            COMMITS=$(git log --pretty=format:"- %s (%h)" -20)
+          else
+            COMMITS=$(git log $LAST_TAG..HEAD --pretty=format:"- %s (%h)")
+          fi
+          
+          # Preparar notas del release
+          if [ -z "${{ inputs.release_notes }}" ]; then
+            NOTES="## 🚀 Cambios en esta versión
+
+          $COMMITS
+
+          **Fecha**: $(date +'%Y-%m-%d %H:%M:%S')"
+          else
+            NOTES="${{ inputs.release_notes }}
+
+          ## 📝 Commits incluidos
+
+          $COMMITS"
+          fi
+          
+          # Guardar en archivo temporal
+          echo "$NOTES" > release_notes.txt
+
+      - name: Crear GitHub Release
+        run: |
+          gh release create ${{ steps.version.outputs.VERSION }} \
+            --title "Release ${{ steps.version.outputs.VERSION }}" \
+            --notes-file release_notes.txt
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Resultado
+        run: |
+          echo "✅ Release ${{ steps.version.outputs.VERSION }} creado exitosamente"
+          echo "🔗 Ver en: https://github.com/${{ github.repository }}/releases"
+

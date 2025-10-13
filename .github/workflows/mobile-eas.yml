@@ -1,0 +1,103 @@
+name: Mobile CI/CD (Expo EAS)
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+env:
+  EXPO_PUBLIC_API_URL: https://software-backend-011n.onrender.com
+
+jobs:
+  lint:
+    name: 🔍 Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+
+  update-eas:
+    name: 📱 Publicar Update (EAS)
+    runs-on: ubuntu-latest
+    needs: lint
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Configurar Expo y EAS
+        uses: expo/expo-github-action@v8
+        with:
+          expo-version: latest
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Publicar actualización con EAS Update
+        run: |
+          eas update --branch production --message "Deploy automático: ${{ github.event.head_commit.message }}"
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          EXPO_PUBLIC_API_URL: ${{ env.EXPO_PUBLIC_API_URL }}
+
+      - name: Mostrar resultado
+        run: |
+          echo "✅ Actualización publicada exitosamente"
+          echo "📱 Los usuarios recibirán la actualización en su próximo lanzamiento de la app"
+
+  build-preview:
+    name: 🏗️ Build Preview (Android)
+    runs-on: ubuntu-latest
+    needs: lint
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Configurar Expo y EAS
+        uses: expo/expo-github-action@v8
+        with:
+          expo-version: latest
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Build preview para Android
+        run: |
+          eas build --platform android --profile preview --non-interactive --no-wait
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Comentar en PR
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '📱 Build preview iniciado. Verifica el progreso en [Expo Dashboard](https://expo.dev/accounts/[tu-usuario]/projects/software-frontend/builds)'
+            })
+
