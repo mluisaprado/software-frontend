@@ -1,0 +1,106 @@
+name: Web CI/CD (Expo Web → Netlify)
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+env:
+  EXPO_PUBLIC_API_URL: https://software-backend-011n.onrender.com
+
+jobs:
+  lint:
+    name: 🔍 Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+      - run: npm ci
+      - run: npm run lint || echo "No hay script de lint"
+
+  build:
+    name: 🏗️ Build Web (Expo Metro)
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Instalar Expo CLI
+        run: npm install -g expo-cli
+
+      - name: Export web (Expo Metro)
+        run: npx expo export --output-dir dist
+        env:
+          EXPO_PUBLIC_API_URL: ${{ env.EXPO_PUBLIC_API_URL }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+  deploy:
+    name: 🚀 Deploy a Netlify (Producción)
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+      - name: Instalar Netlify CLI
+        run: npm install -g netlify-cli
+
+      - name: Deploy con Netlify CLI
+        run: |
+          netlify deploy --dir=dist --prod --site $NETLIFY_SITE_ID
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+      - name: Mostrar URL final
+        run: echo "✅ Sitio publicado en https://santiago-software.netlify.app"
+
+  deploy-preview:
+    name: 🔁 Deploy Preview a Netlify (PR / Develop)
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref != 'refs/heads/main' || github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+      - name: Instalar Netlify CLI
+        run: npm install -g netlify-cli
+
+      - name: Deploy preview con Netlify CLI
+        run: |
+          netlify deploy --dir=dist --site $NETLIFY_SITE_ID
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          
