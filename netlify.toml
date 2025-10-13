@@ -1,12 +1,4 @@
 [build]
-  # El build ya se hace en GitHub Actions
-  command = "echo 'Build realizado por GitHub Actions'"
   publish = "dist"
-  
-[build.environment]
-  NODE_VERSION = "18"
-
-# Prevenir que Netlify intente instalar dependencias
-[build.processing]
-  skip_processing = false
+  command = "true"
 
