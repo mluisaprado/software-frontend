@@ -70,7 +70,7 @@ jobs:
 
       - name: Deploy con Netlify CLI
         run: |
-          netlify deploy --dir=dist --prod --site $NETLIFY_SITE_ID
+          netlify deploy --dir=dist --prod --site $NETLIFY_SITE_ID --build=false
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
@@ -99,7 +99,7 @@ jobs:
 
       - name: Deploy preview con Netlify CLI
         run: |
-          netlify deploy --dir=dist --site $NETLIFY_SITE_ID
+          netlify deploy --dir=dist --site $NETLIFY_SITE_ID --build=false
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
