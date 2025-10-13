@@ -40,7 +40,7 @@ jobs:
         run: npm install -g expo-cli
 
       - name: Export web (Expo Metro)
-        run: npx expo export --output-dir dist
+        run: npx expo export --platform web --output-dir dist
         env:
           EXPO_PUBLIC_API_URL: ${{ env.EXPO_PUBLIC_API_URL }}
 
