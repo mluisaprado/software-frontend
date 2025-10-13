@@ -40,12 +40,6 @@ jobs:
       - name: Instalar dependencias
         run: npm ci
 
-      - name: Configurar Expo
-        uses: expo/expo-github-action@v8
-        with:
-          packager: npm
-          token: ${{ secrets.EXPO_TOKEN }}
-
       - name: Instalar EAS CLI
         run: npm install -g eas-cli
 
@@ -78,12 +72,6 @@ jobs:
 
       - name: Instalar dependencias
         run: npm ci
-
-      - name: Configurar Expo
-        uses: expo/expo-github-action@v8
-        with:
-          packager: npm
-          token: ${{ secrets.EXPO_TOKEN }}
 
       - name: Instalar EAS CLI
         run: npm install -g eas-cli
