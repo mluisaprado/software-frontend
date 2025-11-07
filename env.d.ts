@@ -1,4 +1,9 @@
-declare module '@env' {
-  export const VITE_BACKEND_URL: string;
+declare global {
+  namespace NodeJS {
+    interface ProcessEnv {
+      EXPO_PUBLIC_API_URL?: string;
+    }
+  }
 }
 
+export {};
