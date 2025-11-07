@@ -1,15 +1,15 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { NativeBaseProvider } from 'native-base';
+import { AuthProvider } from './src/context/AuthContext';
+import AppNavigator from './src/navigation/AppNavigator';
+import theme from './src/theme';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Hello World!</Text>
-    </View>
+    <NativeBaseProvider theme={theme}>
+      <AuthProvider>
+        <AppNavigator />
+      </AuthProvider>
+    </NativeBaseProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  text: { fontSize: 18, fontWeight: 'bold', color: '#333' },
-});
