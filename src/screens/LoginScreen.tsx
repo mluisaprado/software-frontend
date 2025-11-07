@@ -65,6 +65,11 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
     clearError();
     try {
       await login(credentials);
+      toast.show({
+        title: 'Sesión iniciada',
+        placement: 'top',
+        bg: 'success.600',
+      });
     } catch {
       showAuthError('No se pudo iniciar sesión. Verifica tus credenciales.');
     }

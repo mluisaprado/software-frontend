@@ -6,6 +6,8 @@ import { useAuth } from '../context/AuthContext';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import HomeScreen from '../screens/HomeScreen';
+import TripsSearchScreen from '../screens/TripsSearchScreen';
+import TripCreateScreen from '../screens/TripCreateScreen';
 import { View, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
 
 const Stack = createStackNavigator();
@@ -59,22 +61,22 @@ function MainTabs() {
         }}
       />
       <Tab.Screen
-        name="Schedule"
-        component={ScheduleScreen}
+        name="TripsSearch"
+        component={TripsSearchScreen}
         options={{
-          tabBarLabel: 'Horarios',
+          tabBarLabel: 'Buscar',
           tabBarIcon: ({ color, size }) => (
-            <Text style={{ fontSize: size, color }}>📅</Text>
+            <Text style={{ fontSize: size, color }}>🔍</Text>
           ),
         }}
       />
       <Tab.Screen
-        name="Chat"
-        component={ChatScreen}
+        name="TripCreate"
+        component={TripCreateScreen}
         options={{
-          tabBarLabel: 'Chat',
+          tabBarLabel: 'Publicar',
           tabBarIcon: ({ color, size }) => (
-            <Text style={{ fontSize: size, color }}>💬</Text>
+            <Text style={{ fontSize: size, color }}>➕</Text>
           ),
         }}
       />
@@ -89,25 +91,6 @@ function MainTabs() {
         }}
       />
     </Tab.Navigator>
-  );
-}
-
-// Pantallas temporales para las tabs
-function ScheduleScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white' }}>
-      <Text style={{ fontSize: 20, fontWeight: '600', color: '#111827' }}>Horarios</Text>
-      <Text style={{ color: '#6b7280', marginTop: 8 }}>Próximamente...</Text>
-    </View>
-  );
-}
-
-function ChatScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white' }}>
-      <Text style={{ fontSize: 20, fontWeight: '600', color: '#111827' }}>Chat</Text>
-      <Text style={{ color: '#6b7280', marginTop: 8 }}>Próximamente...</Text>
-    </View>
   );
 }
 
