@@ -1,54 +1,37 @@
-import axios from 'axios';
 import { LoginCredentials, RegisterCredentials, AuthResponse } from '../types/auth.types';
-import storage from '../utils/storage';
+import api from './apiClient';
 
-// Configuración base de axios
-const API_BASE_URL =
-  process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:3000/api';
+const normalizeAuthResponse = (payload: any): AuthResponse => {
+  const token =
+    payload?.data?.token ??
+    payload?.token ??
+    payload?.data?.accessToken ??
+    payload?.accessToken;
 
-const api = axios.create({
-  baseURL: API_BASE_URL,
-  timeout: 10000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+  const user =
+    payload?.data?.user ??
+    payload?.user ??
+    payload?.data?.data?.user ??
+    payload?.data?.payload?.user ??
+    payload?.data;
 
-// Interceptor para agregar token a las peticiones
-api.interceptors.request.use(
-  async (config) => {
-    try {
-      const token = await storage.getItem('authToken');
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
-    } catch (error) {
-      console.error('Error getting token:', error);
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
+  if (!token || !user) {
+    throw new Error('Respuesta de autenticación inválida: faltan token o usuario.');
   }
-);
 
-// Interceptor para manejar respuestas de error
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      // Token expirado o inválido
-      console.log('Token expirado, redirigiendo al login');
-    }
-    return Promise.reject(error);
-  }
-);
+  return {
+    token,
+    user,
+    message: payload?.message ?? payload?.data?.message,
+  };
+};
 
 export const authService = {
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
     try {
       const response = await api.post('/auth/login', credentials);
-      return response.data;
+      const auth = normalizeAuthResponse(response.data);
+      return auth;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Error al iniciar sesión');
     }
@@ -57,7 +40,8 @@ export const authService = {
   async register(credentials: RegisterCredentials): Promise<AuthResponse> {
     try {
       const response = await api.post('/auth/register', credentials);
-      return response.data;
+      const auth = normalizeAuthResponse(response.data);
+      return auth;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Error al registrarse');
     }

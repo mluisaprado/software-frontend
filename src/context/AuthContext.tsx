@@ -79,14 +79,21 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const restoreToken = async () => {
       try {
         const token = await storage.getItem('authToken');
-        const userData = await storage.getItem('userData');
-        
-        if (token && userData) {
-          const user = JSON.parse(userData);
-          dispatch({ type: 'RESTORE_TOKEN', payload: { user, token } });
-        } else {
-          dispatch({ type: 'SET_LOADING', payload: false });
+        const userDataRaw = await storage.getItem('userData');
+
+        if (token && userDataRaw && userDataRaw !== 'undefined') {
+          try {
+            const user = JSON.parse(userDataRaw);
+            dispatch({ type: 'RESTORE_TOKEN', payload: { user, token } });
+            return;
+          } catch (parseError) {
+            console.error('Error parsing stored userData. Clearing session.', parseError);
+          }
         }
+
+        await storage.deleteItem('authToken');
+        await storage.deleteItem('userData');
+        dispatch({ type: 'SET_LOADING', payload: false });
       } catch (error) {
         console.error('Error restoring token:', error);
         dispatch({ type: 'SET_LOADING', payload: false });
