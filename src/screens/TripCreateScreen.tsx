@@ -15,6 +15,7 @@ import {
 import { Platform } from 'react-native';
 import tripService from '../services/tripService';
 import { CreateTripPayload } from '../types/trip.types';
+import DateInput from '../components/DateInput';
 
 const initialForm: CreateTripPayload = {
   origin: '',
@@ -160,16 +161,14 @@ export default function TripCreateScreen() {
 
             <FormControl isInvalid={Boolean(errors.departure_time)}>
               <FormControl.Label>Fecha y hora de salida</FormControl.Label>
-              <Input
-                placeholder="2025-11-10T08:00:00Z"
+              <DateInput
+                mode="datetime"
                 value={form.departure_time}
-                onChangeText={(value) => handleChange('departure_time', value)}
-                autoCapitalize="none"
-                autoCorrect={false}
+                placeholder="Selecciona fecha y hora"
+                onChange={(date) => handleChange('departure_time', date.toISOString())}
+                minimumDate={new Date()}
+                isInvalid={Boolean(errors.departure_time)}
               />
-              <FormControl.HelperText>
-                Usa formato ISO completo (YYYY-MM-DDTHH:mm:ssZ).
-              </FormControl.HelperText>
               <FormControl.ErrorMessage>{errors.departure_time}</FormControl.ErrorMessage>
             </FormControl>
 
@@ -200,26 +199,6 @@ export default function TripCreateScreen() {
                 <FormControl.ErrorMessage>{errors.total_seats}</FormControl.ErrorMessage>
               </FormControl>
             </HStack>
-
-            <FormControl isInvalid={Boolean(errors.available_seats)}>
-              <FormControl.Label>Asientos disponibles (opcional)</FormControl.Label>
-              <Input
-                placeholder="Si omites, usaremos el total de asientos"
-                value={
-                  form.available_seats !== undefined && form.available_seats !== null
-                    ? String(form.available_seats)
-                    : ''
-                }
-                onChangeText={(value) =>
-                  handleChange(
-                    'available_seats',
-                    value === '' ? undefined : Number(value.replace(',', '.'))
-                  )
-                }
-                keyboardType="number-pad"
-              />
-              <FormControl.ErrorMessage>{errors.available_seats}</FormControl.ErrorMessage>
-            </FormControl>
 
             <Button
               bg="primary.600"

@@ -16,6 +16,7 @@ import {
 } from 'native-base';
 import tripService from '../services/tripService';
 import { Trip, TripFilters } from '../types/trip.types';
+import DateInput from '../components/DateInput';
 
 const defaultFilters: TripFilters = {
   status: 'published',
@@ -136,12 +137,13 @@ export default function TripsSearchScreen() {
           <HStack space={4}>
             <FormControl flex={1}>
               <FormControl.Label>Fecha</FormControl.Label>
-              <Input
-                placeholder="YYYY-MM-DD"
-                value={filters.date ?? ''}
-                onChangeText={(value) => handleFilterChange('date', value)}
-                autoCapitalize="none"
-                autoCorrect={false}
+              <DateInput
+                mode="date"
+                value={filters.date ? `${filters.date}T00:00:00` : undefined}
+                placeholder="Selecciona una fecha"
+                onChange={(date) =>
+                  handleFilterChange('date', date.toISOString().slice(0, 10))
+                }
               />
             </FormControl>
 
