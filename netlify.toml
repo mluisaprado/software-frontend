@@ -2,3 +2,5 @@
   publish = "dist"
   command = "npm run build:web"
 
+[build.environment]
+  NODE_VERSION = "20.19.4"
