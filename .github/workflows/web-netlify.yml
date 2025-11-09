@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20.19.4
           cache: npm
       - run: npm ci
       - run: npm run lint || echo "No hay script de lint"
@@ -30,17 +30,18 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20.19.4
           cache: npm
 
       - name: Instalar dependencias
         run: npm ci
 
-      - name: Instalar Expo CLI
-        run: npm install -g expo-cli
+      - name: Crear config de Expo Router (para CI)
+        run: |
+          echo "export default { static: false };" > expo-router.config.js
 
       - name: Export web (Expo Metro)
-        run: npx expo export --platform web --output-dir dist
+        run: npm run build:web
         env:
           EXPO_PUBLIC_API_URL: ${{ env.EXPO_PUBLIC_API_URL }}
 
@@ -63,7 +64,7 @@ jobs:
           
       - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20.19.4
 
       - uses: actions/download-artifact@v4
         with:
@@ -119,7 +120,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20.19.4
 
       - uses: actions/download-artifact@v4
         with:
