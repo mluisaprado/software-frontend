@@ -140,7 +140,7 @@ export default function TripCreateScreen() {
             <FormControl isInvalid={Boolean(errors.origin)}>
               <FormControl.Label>Origen</FormControl.Label>
               <Input
-                placeholder="Ciudad de origen"
+                placeholder="Lugar de origen"
                 value={form.origin}
                 onChangeText={(value) => handleChange('origin', value)}
                 autoCapitalize="words"
@@ -151,7 +151,7 @@ export default function TripCreateScreen() {
             <FormControl isInvalid={Boolean(errors.destination)}>
               <FormControl.Label>Destino</FormControl.Label>
               <Input
-                placeholder="Ciudad de destino"
+                placeholder="Lugar de destino"
                 value={form.destination}
                 onChangeText={(value) => handleChange('destination', value)}
                 autoCapitalize="words"
