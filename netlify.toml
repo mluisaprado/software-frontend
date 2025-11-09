@@ -1,4 +1,4 @@
 [build]
   publish = "dist"
-  command = "true"
+  command = "npm run build:web"
 
