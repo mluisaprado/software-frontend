@@ -105,7 +105,7 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
                 <FormControl.Label>Email</FormControl.Label>
                 <Input
                   value={credentials.email}
-                  onChangeText={(value) => handleInputChange('email', value)}
+                  onChangeText={(value: string) => handleInputChange('email', value)}
                   keyboardType="email-address"
                   autoCapitalize="none"
                   returnKeyType="next"
@@ -119,7 +119,7 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
                 <FormControl.Label>Contraseña</FormControl.Label>
                 <Input
                   value={credentials.password}
-                  onChangeText={(value) => handleInputChange('password', value)}
+                  onChangeText={(value: string) => handleInputChange('password', value)}
                   autoCapitalize="none"
                   secureTextEntry
                 />

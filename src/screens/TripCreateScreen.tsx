@@ -36,7 +36,7 @@ export default function TripCreateScreen() {
     key: K,
     value: CreateTripPayload[K]
   ) => {
-    setForm((prev) => ({
+    setForm((prev: CreateTripPayload) => ({
       ...prev,
       [key]: value,
     }));
@@ -142,7 +142,7 @@ export default function TripCreateScreen() {
               <Input
                 placeholder="Lugar de origen"
                 value={form.origin}
-                onChangeText={(value) => handleChange('origin', value)}
+                onChangeText={(value: string) => handleChange('origin', value)}
                 autoCapitalize="words"
               />
               <FormControl.ErrorMessage>{errors.origin}</FormControl.ErrorMessage>
@@ -153,7 +153,7 @@ export default function TripCreateScreen() {
               <Input
                 placeholder="Lugar de destino"
                 value={form.destination}
-                onChangeText={(value) => handleChange('destination', value)}
+                onChangeText={(value: string) => handleChange('destination', value)}
                 autoCapitalize="words"
               />
               <FormControl.ErrorMessage>{errors.destination}</FormControl.ErrorMessage>
@@ -165,7 +165,7 @@ export default function TripCreateScreen() {
                 mode="datetime"
                 value={form.departure_time}
                 placeholder="Selecciona fecha y hora"
-                onChange={(date) => handleChange('departure_time', date.toISOString())}
+                onChange={(date: Date) => handleChange('departure_time', date.toISOString())}
                 minimumDate={new Date()}
                 isInvalid={Boolean(errors.departure_time)}
               />
@@ -178,7 +178,7 @@ export default function TripCreateScreen() {
                 <Input
                   placeholder="0"
                   value={form.price_per_seat ? String(form.price_per_seat) : ''}
-                  onChangeText={(value) =>
+                  onChangeText={(value: string) =>
                     handleChange('price_per_seat', Number(value.replace(',', '.')))
                   }
                   keyboardType="decimal-pad"
@@ -191,7 +191,7 @@ export default function TripCreateScreen() {
                 <Input
                   placeholder="1"
                   value={form.total_seats ? String(form.total_seats) : ''}
-                  onChangeText={(value) =>
+                  onChangeText={(value: string) =>
                     handleChange('total_seats', Number(value.replace(',', '.')))
                   }
                   keyboardType="number-pad"

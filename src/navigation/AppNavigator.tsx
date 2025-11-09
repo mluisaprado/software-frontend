@@ -55,7 +55,7 @@ function MainTabs() {
         component={HomeScreen}
         options={{
           tabBarLabel: 'Home',
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ color, size }: { color: string; size: number }) => (
             <Text style={{ fontSize: size, color }}>🏠</Text>
           ),
         }}
@@ -65,7 +65,7 @@ function MainTabs() {
         component={TripsSearchScreen}
         options={{
           tabBarLabel: 'Buscar',
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ color, size }: { color: string; size: number }) => (
             <Text style={{ fontSize: size, color }}>🔍</Text>
           ),
         }}
@@ -75,7 +75,7 @@ function MainTabs() {
         component={TripCreateScreen}
         options={{
           tabBarLabel: 'Publicar',
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ color, size }: { color: string; size: number }) => (
             <Text style={{ fontSize: size, color }}>➕</Text>
           ),
         }}
@@ -85,7 +85,7 @@ function MainTabs() {
         component={ProfileScreen}
         options={{
           tabBarLabel: 'Perfil',
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ color, size }: { color: string; size: number }) => (
             <Text style={{ fontSize: size, color }}>👤</Text>
           ),
         }}
