@@ -10,7 +10,7 @@ Aplicación frontend desarrollada con **React Native + Expo** con despliegue web
 - **Expo** - Plataforma de desarrollo
 - **TypeScript** - Tipado estático
 - **Axios** - Cliente HTTP
-- **Netlify** - Hosting y despliegue web
+- **Netlify** - Hosting y despliegue web pagando el plan personal de 9 USD al mes por el equipo de desarrollo del proyecto 
 - **GitHub Actions** - CI/CD
 
 ---
