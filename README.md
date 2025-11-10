@@ -10,7 +10,7 @@ Aplicación frontend desarrollada con **React Native + Expo** con despliegue web
 - **Expo** - Plataforma de desarrollo
 - **TypeScript** - Tipado estático
 - **Axios** - Cliente HTTP
-- **Netlify** - Hosting y despliegue web
+- **Netlify** - Hosting y despliegue web pagando el plan personal de 9 USD al mes por el equipo de desarrollo del proyecto 
 - **GitHub Actions** - CI/CD
 
 ---
@@ -128,7 +128,7 @@ El proyecto cuenta con **2 pipelines** automatizados usando **GitHub Actions**:
 1. **🔍 Lint** - Verificación de código TypeScript
 2. **🏗️ Build** - Compilación del proyecto con Expo
 3. **🧪 Test** - Ejecución de tests
-4. **🚀 Deploy** - Despliegue automático a Netlify
+4. **🚀 Deploy** - Despliegue automático a Netlify con plan pagado personal
 5. **📦 Release** - Creación automática de tags y releases
 
 ```
