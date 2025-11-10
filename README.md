@@ -40,7 +40,7 @@ Aplicación frontend desarrollada con **React Native + Expo** con despliegue web
    
    Crear archivo `.env` en la raíz del proyecto:
    ```env
-   VITE_BACKEND_URL=http://localhost:3000
+   VITE_BACKEND_URL=http://localhost:4000
    ```
 
 ---
