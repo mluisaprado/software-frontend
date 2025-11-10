@@ -128,7 +128,7 @@ El proyecto cuenta con **2 pipelines** automatizados usando **GitHub Actions**:
 1. **🔍 Lint** - Verificación de código TypeScript
 2. **🏗️ Build** - Compilación del proyecto con Expo
 3. **🧪 Test** - Ejecución de tests
-4. **🚀 Deploy** - Despliegue automático a Netlify
+4. **🚀 Deploy** - Despliegue automático a Netlify con plan pagado personal
 5. **📦 Release** - Creación automática de tags y releases
 
 ```
