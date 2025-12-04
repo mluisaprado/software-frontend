@@ -13,7 +13,9 @@ import {
   Spinner,
   useToast,
   Badge,
+  Pressable, 
 } from 'native-base';
+import { useNavigation } from '@react-navigation/native'; 
 import tripService from '../services/tripService';
 import { Trip, TripFilters } from '../types/trip.types';
 import DateInput from '../components/DateInput';
@@ -27,6 +29,7 @@ export default function TripsSearchScreen() {
   const [trips, setTrips] = useState<Trip[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
+  const navigation = useNavigation<any>(); 
 
   const fetchTrips = useCallback(async () => {
     setIsLoading(true);
@@ -64,6 +67,21 @@ export default function TripsSearchScreen() {
       timeStyle: 'short',
     });
 
+    const handleOpenDriverProfile = () => {
+      if (!item.driver?.id) {
+        toast.show({
+          title: 'Perfil no disponible',
+          description: 'Este viaje no tiene un conductor asociado.',
+          bg: 'warning.500',
+        });
+        return;
+      }
+
+      navigation.navigate('ProfileDetail', {
+        userId: item.driver.id, 
+      });
+    };
+
     return (
       <Box
         key={item.id}
@@ -86,10 +104,15 @@ export default function TripsSearchScreen() {
             <Text color="neutral.600" fontSize="sm">
               Asientos disponibles: {item.available_seats} / {item.total_seats}
             </Text>
-            <Text color="neutral.600" fontSize="sm">
-              Conductor: {item.driver?.name ?? 'N/A'}
-            </Text>
+
+            {/* 👇 Nombre del conductor clickeable para visitar perfil */}
+            <Pressable onPress={handleOpenDriverProfile}>
+              <Text color="primary.700" fontSize="sm" fontWeight="bold" underline>
+                Conductor: {item.driver?.name ?? 'N/A'}
+              </Text>
+            </Pressable>
           </VStack>
+
           <VStack alignItems="flex-end" space={2}>
             <Text fontSize="lg" fontWeight="bold" color="primary.600">
               ${item.price_per_seat.toFixed(2)}
@@ -196,7 +219,7 @@ export default function TripsSearchScreen() {
           <FlatList
             data={trips}
             renderItem={renderTrip}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item.id.toString()}
             showsVerticalScrollIndicator={false}
           />
         )}
@@ -204,4 +227,3 @@ export default function TripsSearchScreen() {
     </Box>
   );
 }
-

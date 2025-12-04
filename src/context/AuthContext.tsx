@@ -1,26 +1,40 @@
-import React, { createContext, useContext, useReducer, useEffect, ReactNode } from 'react';
-import { AuthState, User, LoginCredentials, RegisterCredentials, AuthResponse } from '../types/auth.types';
-import { authService } from '../services/authService';
-import storage from '../utils/storage';
+import React, {
+  createContext,
+  useContext,
+  useReducer,
+  useEffect,
+  ReactNode,
+} from "react";
+import {
+  AuthState,
+  User,
+  LoginCredentials,
+  RegisterCredentials,
+  AuthResponse,
+} from "../types/auth.types";
+import { authService } from "../services/authService";
+import storage from "../utils/storage";
 
 interface AuthContextType extends AuthState {
   login: (credentials: LoginCredentials) => Promise<void>;
   register: (credentials: RegisterCredentials) => Promise<void>;
   logout: () => Promise<void>;
   clearError: () => void;
-  error: string | null;
 }
 
+// Contexto
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Acciones del reducer
 type AuthAction =
-  | { type: 'SET_LOADING'; payload: boolean }
-  | { type: 'LOGIN_SUCCESS'; payload: { user: User; token: string } }
-  | { type: 'LOGOUT' }
-  | { type: 'SET_ERROR'; payload: string }
-  | { type: 'CLEAR_ERROR' }
-  | { type: 'RESTORE_TOKEN'; payload: { user: User; token: string } };
+  | { type: "SET_LOADING"; payload: boolean }
+  | { type: "LOGIN_SUCCESS"; payload: { user: User; token: string } }
+  | { type: "LOGOUT" }
+  | { type: "SET_ERROR"; payload: string }
+  | { type: "CLEAR_ERROR" }
+  | { type: "RESTORE_TOKEN"; payload: { user: User; token: string } };
 
+// Estado inicial
 const initialState: AuthState = {
   user: null,
   token: null,
@@ -29,38 +43,48 @@ const initialState: AuthState = {
   error: null,
 };
 
+// Reducer
 function authReducer(state: AuthState, action: AuthAction): AuthState {
   switch (action.type) {
-    case 'SET_LOADING':
+    case "SET_LOADING":
       return { ...state, isLoading: action.payload };
-    case 'LOGIN_SUCCESS':
+
+    case "LOGIN_SUCCESS":
       return {
         ...state,
         user: action.payload.user,
         token: action.payload.token,
         isAuthenticated: true,
         isLoading: false,
+        error: null,
       };
-    case 'LOGOUT':
+
+    case "LOGOUT":
       return {
         ...state,
         user: null,
         token: null,
         isAuthenticated: false,
         isLoading: false,
+        error: null,
       };
-    case 'SET_ERROR':
+
+    case "SET_ERROR":
       return { ...state, error: action.payload, isLoading: false };
-    case 'CLEAR_ERROR':
+
+    case "CLEAR_ERROR":
       return { ...state, error: null };
-    case 'RESTORE_TOKEN':
+
+    case "RESTORE_TOKEN":
       return {
         ...state,
         user: action.payload.user,
         token: action.payload.token,
         isAuthenticated: true,
         isLoading: false,
+        error: null,
       };
+
     default:
       return state;
   }
@@ -72,31 +96,34 @@ interface AuthProviderProps {
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [state, dispatch] = useReducer(authReducer, initialState);
-  const [error, setError] = React.useState<string | null>(null);
 
   // Restaurar token al iniciar la app
   useEffect(() => {
     const restoreToken = async () => {
       try {
-        const token = await storage.getItem('authToken');
-        const userDataRaw = await storage.getItem('userData');
+        const token = await storage.getItem("authToken");
+        const userDataRaw = await storage.getItem("userData");
 
-        if (token && userDataRaw && userDataRaw !== 'undefined') {
+        if (token && userDataRaw && userDataRaw !== "undefined") {
           try {
-            const user = JSON.parse(userDataRaw);
-            dispatch({ type: 'RESTORE_TOKEN', payload: { user, token } });
+            const user: User = JSON.parse(userDataRaw);
+            dispatch({ type: "RESTORE_TOKEN", payload: { user, token } });
             return;
           } catch (parseError) {
-            console.error('Error parsing stored userData. Clearing session.', parseError);
+            console.error(
+              "Error parsing stored userData. Clearing session.",
+              parseError
+            );
           }
         }
 
-        await storage.deleteItem('authToken');
-        await storage.deleteItem('userData');
-        dispatch({ type: 'SET_LOADING', payload: false });
+        // Si no hay sesión válida, limpiamos y marcamos loading = false
+        await storage.deleteItem("authToken");
+        await storage.deleteItem("userData");
+        dispatch({ type: "SET_LOADING", payload: false });
       } catch (error) {
-        console.error('Error restoring token:', error);
-        dispatch({ type: 'SET_LOADING', payload: false });
+        console.error("Error restoring token:", error);
+        dispatch({ type: "SET_LOADING", payload: false });
       }
     };
 
@@ -105,64 +132,68 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const login = async (credentials: LoginCredentials) => {
     try {
-      dispatch({ type: 'SET_LOADING', payload: true });
-      setError(null);
-      
+      dispatch({ type: "SET_LOADING", payload: true });
+      dispatch({ type: "CLEAR_ERROR" });
+
       const response: AuthResponse = await authService.login(credentials);
-      
-      // Guardar token y datos del usuario
-      await storage.setItem('authToken', response.token);
-      await storage.setItem('userData', JSON.stringify(response.user));
-      
-      dispatch({ type: 'LOGIN_SUCCESS', payload: { user: response.user, token: response.token } });
+      // Backend debe responder algo tipo: { token, user }
+
+      await storage.setItem("authToken", response.token);
+      await storage.setItem("userData", JSON.stringify(response.user));
+
+      dispatch({
+        type: "LOGIN_SUCCESS",
+        payload: { user: response.user, token: response.token },
+      });
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || 'Error al iniciar sesión';
-      setError(errorMessage);
-      dispatch({ type: 'SET_ERROR', payload: errorMessage });
+      const errorMessage =
+        error?.response?.data?.message || "Error al iniciar sesión";
+      dispatch({ type: "SET_ERROR", payload: errorMessage });
     }
   };
 
   const register = async (credentials: RegisterCredentials) => {
     try {
-      dispatch({ type: 'SET_LOADING', payload: true });
-      setError(null);
-      
+      dispatch({ type: "SET_LOADING", payload: true });
+      dispatch({ type: "CLEAR_ERROR" });
+
       const response: AuthResponse = await authService.register(credentials);
-      
-      // Guardar token y datos del usuario
-      await storage.setItem('authToken', response.token);
-      await storage.setItem('userData', JSON.stringify(response.user));
-      
-      dispatch({ type: 'LOGIN_SUCCESS', payload: { user: response.user, token: response.token } });
+      // También asumimos { token, user }
+
+      await storage.setItem("authToken", response.token);
+      await storage.setItem("userData", JSON.stringify(response.user));
+
+      dispatch({
+        type: "LOGIN_SUCCESS",
+        payload: { user: response.user, token: response.token },
+      });
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || 'Error al registrarse';
-      setError(errorMessage);
-      dispatch({ type: 'SET_ERROR', payload: errorMessage });
+      const errorMessage =
+        error?.response?.data?.message || "Error al registrarse";
+      dispatch({ type: "SET_ERROR", payload: errorMessage });
     }
   };
 
   const logout = async () => {
     try {
-      await storage.deleteItem('authToken');
-      await storage.deleteItem('userData');
-      dispatch({ type: 'LOGOUT' });
+      await storage.deleteItem("authToken");
+      await storage.deleteItem("userData");
+      dispatch({ type: "LOGOUT" });
     } catch (error) {
-      console.error('Error during logout:', error);
+      console.error("Error during logout:", error);
     }
   };
 
   const clearError = () => {
-    setError(null);
-    dispatch({ type: 'CLEAR_ERROR' });
+    dispatch({ type: "CLEAR_ERROR" });
   };
 
   const value: AuthContextType = {
-    ...state,
+    ...state, // user, token, isLoading, isAuthenticated, error
     login,
     register,
     logout,
     clearError,
-    error,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
@@ -171,7 +202,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 }

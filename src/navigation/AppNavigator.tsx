@@ -8,10 +8,12 @@ import RegisterScreen from '../screens/RegisterScreen';
 import HomeScreen from '../screens/HomeScreen';
 import TripsSearchScreen from '../screens/TripsSearchScreen';
 import TripCreateScreen from '../screens/TripCreateScreen';
+import ProfileScreen from "../screens/ProfileScreen";
 import { View, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+const AppStack = createStackNavigator();
 
 // Stack de autenticación (Login/Register)
 function AuthStack() {
@@ -82,7 +84,7 @@ function MainTabs() {
       />
       <Tab.Screen
         name="Profile"
-        component={ProfileScreen}
+        component={AccountScreen}
         options={{
           tabBarLabel: 'Perfil',
           tabBarIcon: ({ color, size }: { color: string; size: number }) => (
@@ -94,24 +96,80 @@ function MainTabs() {
   );
 }
 
-function ProfileScreen() {
+function AppStackNavigator() {
+  return (
+    <AppStack.Navigator>
+      {/* Pantalla principal: las tabs */}
+      <AppStack.Screen
+        name="MainTabs"
+        component={MainTabs}
+        options={{ headerShown: false }}
+      />
+
+      {/* Pantalla para VISITAR perfil de otro usuario (CU5) */}
+      <AppStack.Screen
+        name="ProfileDetail"
+        component={ProfileScreen} 
+        options={{ title: "Perfil" }}
+      />
+    </AppStack.Navigator>
+  );
+}
+
+function AccountScreen() {
   const { user, logout } = useAuth();
   
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white', paddingHorizontal: 24 }}>
-      <View style={{ width: 96, height: 96, backgroundColor: '#dbeafe', borderRadius: 48, alignItems: 'center', justifyContent: 'center', marginBottom: 24 }}>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'white',
+        paddingHorizontal: 24,
+      }}
+    >
+      <View
+        style={{
+          width: 96,
+          height: 96,
+          backgroundColor: '#dbeafe',
+          borderRadius: 48,
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginBottom: 24,
+        }}
+      >
         <Text style={{ fontSize: 32 }}>👤</Text>
       </View>
-      <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#111827', marginBottom: 8 }}>
+
+      <Text
+        style={{
+          fontSize: 24,
+          fontWeight: 'bold',
+          color: '#111827',
+          marginBottom: 8,
+        }}
+      >
         {user?.name || 'Usuario'}
       </Text>
-      <Text style={{ color: '#6b7280', marginBottom: 32 }}>{user?.email}</Text>
-      
+
+      <Text style={{ color: '#6b7280', marginBottom: 32 }}>
+        {user?.email}
+      </Text>
+
       <TouchableOpacity
-        style={{ backgroundColor: '#ef4444', borderRadius: 12, paddingVertical: 12, paddingHorizontal: 32 }}
+        style={{
+          backgroundColor: '#ef4444',
+          borderRadius: 12,
+          paddingVertical: 12,
+          paddingHorizontal: 32,
+        }}
         onPress={logout}
       >
-        <Text style={{ color: 'white', fontWeight: '600' }}>Cerrar Sesión</Text>
+        <Text style={{ color: 'white', fontWeight: '600' }}>
+          Cerrar Sesión
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -136,7 +194,7 @@ export default function AppNavigator() {
 
   return (
     <NavigationContainer>
-      {isAuthenticated ? <MainTabs /> : <AuthStack />}
+      {isAuthenticated ? <AppStackNavigator /> : <AuthStack />}
     </NavigationContainer>
   );
 }
