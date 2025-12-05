@@ -10,6 +10,9 @@ import TripsSearchScreen from '../screens/TripsSearchScreen';
 import TripCreateScreen from '../screens/TripCreateScreen';
 import ProfileScreen from "../screens/ProfileScreen";
 import { View, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
+import MyTripsScreen from '../screens/MyTripsScreen';
+import TripReservationsScreen from '../screens/TripReservationsScreen';
+import { useNavigation } from '@react-navigation/native';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -27,6 +30,7 @@ function AuthStack() {
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Register" component={RegisterScreen} />
     </Stack.Navigator>
+    
   );
 }
 
@@ -112,13 +116,26 @@ function AppStackNavigator() {
         component={ProfileScreen} 
         options={{ title: "Perfil" }}
       />
+      <AppStack.Screen
+        name="MyTrips"
+        component={MyTripsScreen}
+        options={{ title: 'Mis viajes' }}
+      />
+      <AppStack.Screen
+        name="TripReservations"
+        component={TripReservationsScreen}
+        options={{ title: 'Solicitudes' }}
+      />
     </AppStack.Navigator>
+
+    
   );
 }
 
 function AccountScreen() {
   const { user, logout } = useAuth();
-  
+  const navigation = useNavigation<any>();
+
   return (
     <View
       style={{
@@ -129,6 +146,7 @@ function AccountScreen() {
         paddingHorizontal: 24,
       }}
     >
+      {/* Avatar */}
       <View
         style={{
           width: 96,
@@ -143,6 +161,7 @@ function AccountScreen() {
         <Text style={{ fontSize: 32 }}>👤</Text>
       </View>
 
+      {/* Nombre + mail */}
       <Text
         style={{
           fontSize: 24,
@@ -158,6 +177,23 @@ function AccountScreen() {
         {user?.email}
       </Text>
 
+      {/* Botón gestionar solicitudes */}
+      <TouchableOpacity
+        style={{
+          backgroundColor: '#2563eb',
+          borderRadius: 12,
+          paddingVertical: 12,
+          paddingHorizontal: 32,
+          marginBottom: 12,
+        }}
+        onPress={() => navigation.navigate('MyTrips')}
+      >
+        <Text style={{ color: 'white', fontWeight: '600' }}>
+          Gestionar solicitudes
+        </Text>
+      </TouchableOpacity>
+
+      {/* Botón logout */}
       <TouchableOpacity
         style={{
           backgroundColor: '#ef4444',
