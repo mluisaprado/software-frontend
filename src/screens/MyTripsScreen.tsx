@@ -27,7 +27,8 @@ export default function MyTripsScreen() {
     if (!user?.id) return;
     setIsLoading(true);
     try {
-      const allTrips = await tripService.listTrips({});
+      // 👇 ahora pedimos TODOS los estados
+      const allTrips = await tripService.listTrips({ status: 'all' });
       const myTrips = allTrips.filter((t) => t.driver?.id === user.id);
       setTrips(myTrips);
     } catch (error: any) {
@@ -41,6 +42,7 @@ export default function MyTripsScreen() {
       setIsLoading(false);
     }
   }, [user, toast]);
+  
 
   useEffect(() => {
     loadTrips();
