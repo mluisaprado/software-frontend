@@ -12,6 +12,10 @@ import ProfileScreen from "../screens/ProfileScreen";
 import { View, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
 import MyTripsScreen from '../screens/MyTripsScreen';
 import TripReservationsScreen from '../screens/TripReservationsScreen';
+import ChatScreen from '../screens/chatScreen';
+import MyUpcomingTripsScreen from '../screens/MyUpcomingTripsScreen';
+
+
 import { useNavigation } from '@react-navigation/native';
 
 const Stack = createStackNavigator();
@@ -126,6 +130,20 @@ function AppStackNavigator() {
         component={TripReservationsScreen}
         options={{ title: 'Solicitudes' }}
       />
+      
+      <AppStack.Screen
+        name="MyUpcomingTrips"
+        component={MyUpcomingTripsScreen}
+        options={{ title: 'Próximos viajes' }}
+      />
+
+
+
+      <AppStack.Screen
+        name="Chat"
+        component={ChatScreen}
+        options={{ title: 'Chat' }}
+      />
     </AppStack.Navigator>
 
     
@@ -190,6 +208,21 @@ function AccountScreen() {
       >
         <Text style={{ color: 'white', fontWeight: '600' }}>
           Gestionar solicitudes
+        </Text>
+      </TouchableOpacity>
+      {/* Botón próximos viajes */}
+      <TouchableOpacity
+        style={{
+          backgroundColor: '#10b981', // verde bonito
+          borderRadius: 12,
+          paddingVertical: 12,
+          paddingHorizontal: 32,
+          marginBottom: 12,
+        }}
+        onPress={() => navigation.navigate('MyUpcomingTrips')}
+      >
+        <Text style={{ color: 'white', fontWeight: '600' }}>
+          Próximos viajes
         </Text>
       </TouchableOpacity>
 

@@ -12,7 +12,7 @@ import {
   Spinner,
   useToast,
 } from 'native-base';
-import { useRoute } from '@react-navigation/native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import reservationService from '../services/reservationService';
 
 type RootStackParamList = {
@@ -45,9 +45,12 @@ interface ReservationItem {
 }
 
 export default function TripReservationsScreen() {
-  const route = useRoute();
+  const route = useRoute<any>();
+  const navigation = useNavigation<any>();
+
   const { tripId, origin, destination } =
-  (route.params as TripReservationsParams) ?? {};
+    (route.params as TripReservationsParams) ?? {};
+
   const [reservations, setReservations] = useState<ReservationItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
@@ -112,6 +115,7 @@ export default function TripReservationsScreen() {
 
   const renderItem = ({ item }: { item: ReservationItem }) => {
     const isPending = item.status === 'pending';
+    const canChat = item.status === 'confirmed';
 
     return (
       <Box
@@ -168,6 +172,24 @@ export default function TripReservationsScreen() {
                 Rechazar
               </Button>
             </HStack>
+          )}
+
+          {canChat && item.user && (
+            <Button
+              mt={2}
+              variant="outline"
+              borderColor="primary.600"
+              _text={{ color: 'primary.600' }}
+              onPress={() =>
+                navigation.navigate('Chat', {
+                  tripId,
+                  otherUserId: item.user!.id,
+                  otherUserName: item.user!.name,
+                })
+              }
+            >
+              Chatear con {item.user.name}
+            </Button>
           )}
         </VStack>
       </Box>
