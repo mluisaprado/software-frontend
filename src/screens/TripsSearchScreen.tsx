@@ -61,7 +61,7 @@ export default function TripsSearchScreen() {
     }));
   };
 
-  const handleReserve = async (tripId: string) => {
+  const handleReserve = async (tripId: string | number) => {
     try {
       const result = await reservationService.reserveTrip(tripId);
 
@@ -73,6 +73,8 @@ export default function TripsSearchScreen() {
 
       await fetchTrips();
     } catch (error: any) {
+      console.error('Error al reservar viaje:', error);
+
       const message =
         error?.response?.data?.message ??
         'No se pudo crear la reserva';

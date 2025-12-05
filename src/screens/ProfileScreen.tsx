@@ -1,6 +1,6 @@
 // src/screens/ProfileScreen.tsx
 import React, { useEffect, useState } from "react";
-import { RouteProp, useRoute } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
 import { Box, VStack, Heading, Text, Spinner } from "native-base";
 
 type RootStackParamList = {
@@ -8,7 +8,7 @@ type RootStackParamList = {
   // acá van las otras rutas que ya tengan definidas en tu app
 };
 
-type ProfileRouteProp = RouteProp<RootStackParamList, "ProfileDetail">;
+type ProfileDetailParams = RootStackParamList["ProfileDetail"];
 
 interface User {
   id: number;
@@ -17,8 +17,8 @@ interface User {
 }
 
 export default function ProfileScreen() {
-  const route = useRoute<ProfileRouteProp>();
-  const { userId } = route.params;
+  const route = useRoute();
+  const { userId } = (route.params as ProfileDetailParams) ?? {};
 
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
