@@ -19,6 +19,7 @@ import { useNavigation } from '@react-navigation/native';
 import tripService from '../services/tripService';
 import { Trip, TripFilters } from '../types/trip.types';
 import DateInput from '../components/DateInput';
+import reservationService from '../services/reservationService';
 
 const defaultFilters: TripFilters = {
   status: 'published',
@@ -60,6 +61,30 @@ export default function TripsSearchScreen() {
     }));
   };
 
+  const handleReserve = async (tripId: string) => {
+    try {
+      const result = await reservationService.reserveTrip(tripId);
+
+      toast.show({
+        title: 'Reserva enviada',
+        description: result?.message ?? 'Reserva creada correctamente',
+        bg: 'success.600',
+      });
+
+      await fetchTrips();
+    } catch (error: any) {
+      const message =
+        error?.response?.data?.message ??
+        'No se pudo crear la reserva';
+
+      toast.show({
+        title: 'Error',
+        description: message,
+        bg: 'error.600',
+      });
+    }
+  };
+
   const renderTrip = ({ item }: { item: Trip }) => {
     const departureDate = new Date(item.departure_time);
     const formattedDate = departureDate.toLocaleString(undefined, {
@@ -81,6 +106,9 @@ export default function TripsSearchScreen() {
         userId: item.driver.id, 
       });
     };
+
+    const isFull =
+      item.available_seats === 0 || item.status !== 'published';
 
     return (
       <Box
@@ -105,12 +133,23 @@ export default function TripsSearchScreen() {
               Asientos disponibles: {item.available_seats} / {item.total_seats}
             </Text>
 
-            {/* 👇 Nombre del conductor clickeable para visitar perfil */}
+            {/* Nombre del conductor clickeable para visitar perfil */}
             <Pressable onPress={handleOpenDriverProfile}>
               <Text color="primary.700" fontSize="sm" fontWeight="bold" underline>
                 Conductor: {item.driver?.name ?? 'N/A'}
               </Text>
             </Pressable>
+
+            <Button
+              size="sm"
+              bg={isFull ? 'neutral.300' : 'primary.600'}
+              _pressed={{ bg: isFull ? 'neutral.300' : 'primary.700' }}
+              isDisabled={isFull}
+              onPress={() => handleReserve(item.id)}
+            >
+              {isFull ? 'Sin cupos' : 'Reservar'}
+            </Button>
+
           </VStack>
 
           <VStack alignItems="flex-end" space={2}>
@@ -125,6 +164,8 @@ export default function TripsSearchScreen() {
       </Box>
     );
   };
+
+
 
   return (
     <Box flex={1} bg="white" safeArea>
