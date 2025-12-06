@@ -19,8 +19,10 @@ jobs:
         with:
           node-version: 20.19.4
           cache: npm
-      - run: npm ci
-      - run: npm run lint || echo "No hay script de lint"
+      - name: Instalar dependencias
+        run: npm ci --legacy-peer-deps
+      - name: Ejecutar lint
+        run: npm run lint || echo "No hay script de lint"
 
   test:
     name: 🧪 Tests
@@ -57,7 +59,7 @@ jobs:
           cache: npm
 
       - name: Instalar dependencias
-        run: npm ci
+        run: npm ci --legacy-peer-deps
 
       - name: Crear config de Expo Router (para CI)
         run: |
