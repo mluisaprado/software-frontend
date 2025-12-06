@@ -10,14 +10,17 @@ Este pipeline automatiza la verificación y despliegue del proyecto usando GitHu
 - Verifica el estilo y calidad del código
 - Se ejecuta en todos los push y pull requests
 
-### 2. **Build** 🏗️
+### 2. **Test** 🧪
+- Ejecuta tests unitarios y de integración
+- Genera reporte de cobertura de código
+- Valida que no se rompan funcionalidades existentes
+- Se ejecuta después de Lint y antes de Build
+
+### 3. **Build** 🏗️
 - Verifica que el código compila correctamente
 - Ejecuta verificación de TypeScript
 - Genera build para web
-
-### 3. **Test** 🧪
-- Ejecuta tests unitarios y de integración
-- Valida que no se rompan funcionalidades existentes
+- Solo se ejecuta si los tests pasan
 
 ### 4. **Deploy** 🚀
 - **Solo se ejecuta en rama `main`**
@@ -54,26 +57,29 @@ Ya configurados en `package.json`:
   "build:web": "expo export --platform web --output-dir dist",
   "deploy": "netlify deploy --dir=dist --prod",
   "lint": "tsc --noEmit",
-  "test": "echo \"Tests pendientes\" && exit 0"
+  "test": "npx jest",
+  "test:watch": "npx jest --watch",
+  "test:coverage": "npx jest --coverage"
 }
 ```
 
 ## 🚦 Flujo de Trabajo
 
 ```
-Push/PR → Lint → Build + Test → Deploy a Netlify (solo main) → Create Release
+Push/PR → Lint → Test → Build → Deploy a Netlify (solo main) → Create Release
 ```
 
 ## 🎯 Triggers
 
 - **Push** a `main` o `develop`: Ejecuta todo el pipeline
-- **Pull Request**: Ejecuta Lint, Build y Test (no Deploy)
-- **Deploy**: Solo en push a `main`
+- **Pull Request**: Ejecuta Lint, Test y Build (no Deploy)
+- **Deploy**: Solo en push a `main` (después de que pasen todos los tests)
 
 ## 📝 Notas
 
-- Si no tienes tests configurados, el pipeline continuará (no falla)
-- El despliegue es **automático** solo en la rama `main`
+- Los tests deben pasar para que el build continúe
+- El despliegue es **automático** solo en la rama `main` y solo si todos los tests pasan
+- El reporte de cobertura se genera automáticamente en cada ejecución de tests
 - Cada deploy a producción crea automáticamente un **tag y release en GitHub**
 - El archivo `netlify.toml` configura Netlify para omitir el build (ya se hace en GitHub Actions)
 - Para deploys manuales, puedes ejecutar localmente:
