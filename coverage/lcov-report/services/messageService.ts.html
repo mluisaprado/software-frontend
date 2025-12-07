@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/10</span>
+                <span class='fraction'>10/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/6</span>
+                <span class='fraction'>6/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/2</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/10</span>
+                <span class='fraction'>10/10</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -151,38 +151,38 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -213,39 +213,39 @@ interface SendResponse {
   data: ChatMessage;
 }
 &nbsp;
-async function <span class="fstat-no" title="function not covered" >listMessages(</span>tripId: number, otherUserId: number) {
-  const response = <span class="cstat-no" title="statement not covered" >await api.get&lt;ListResponse | ChatMessage[]&gt;(</span>
+async function listMessages(tripId: number, otherUserId: number) {
+  const response = await api.get&lt;ListResponse | ChatMessage[]&gt;(
     `/messages/${tripId}/${otherUserId}`
   );
 &nbsp;
-  const payload: any = <span class="cstat-no" title="statement not covered" >response.data;</span>
+  const payload: any = response.data;
 &nbsp;
   // Caso 1: backend devuelve directamente un array
-<span class="cstat-no" title="statement not covered" >  if (Array.isArray(payload)) {</span>
-<span class="cstat-no" title="statement not covered" >    return payload as ChatMessage[];</span>
+  if (Array.isArray(payload)) {
+    return payload as ChatMessage[];
   }
 &nbsp;
   // Caso 2: backend devuelve { success, data }
-<span class="cstat-no" title="statement not covered" >  if (payload?.data) {</span>
-<span class="cstat-no" title="statement not covered" >    return payload.data as ChatMessage[];</span>
+  if (payload?.data) {
+    return payload.data as ChatMessage[];
   }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  return [];</span>
+  return [];
 }
 &nbsp;
-async function <span class="fstat-no" title="function not covered" >sendMessage(</span>
+async function sendMessage(
   tripId: number,
   receiverId: number,
   content: string
 ) {
-  const response = <span class="cstat-no" title="statement not covered" >await api.post&lt;SendResponse | ChatMessage&gt;('/messages', {</span>
+  const response = await api.post&lt;SendResponse | ChatMessage&gt;('/messages', {
     tripId,
     receiverId,
     content,
   });
 &nbsp;
-  const payload: any = <span class="cstat-no" title="statement not covered" >response.data;</span>
-<span class="cstat-no" title="statement not covered" >  return (payload?.data ?? payload) as ChatMessage;</span>
+  const payload: any = response.data;
+  return (payload?.data ?? payload) as ChatMessage;
 }
 &nbsp;
 export default {
@@ -259,7 +259,7 @@ export default {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-12-06T15:22:44.021Z
+                at 2025-12-07T19:23:59.770Z
             </div>
         <script src="../prettify.js"></script>
         <script>
