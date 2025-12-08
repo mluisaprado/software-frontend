@@ -3,6 +3,7 @@ export interface User {
   name: string;
   email: string;
   avatar?: string;
+  profile_picture?: string;
   rating?: number;
   tripsCount?: number;
 }
