@@ -345,7 +345,7 @@ export default function HomeScreen() {
 
         <Box px={6} mb={6}>
           <Text fontSize="lg" fontWeight="semibold" color="neutral.900" mb={4}>
-            Viajes recientes
+            Última actividad
           </Text>
 
           {recentTrips.length === 0 ? (
@@ -462,7 +462,7 @@ export default function HomeScreen() {
                       }}
                     >
                       <Text color="white" fontSize="sm" fontWeight="semibold">
-                        Ver detalles
+                        Chatear
                       </Text>
                     </Pressable>
                   </Box>

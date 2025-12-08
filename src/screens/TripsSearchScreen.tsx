@@ -161,7 +161,7 @@ export default function TripsSearchScreen() {
 
           <VStack alignItems="flex-end" space={2}>
             <Text fontSize="lg" fontWeight="bold" color="primary.600">
-              ${item.price_per_seat.toFixed(2)}
+              ${Math.round(item.price_per_seat)}
             </Text>
             <Badge colorScheme="primary" variant="subtle" borderRadius="lg">
               {item.status}
