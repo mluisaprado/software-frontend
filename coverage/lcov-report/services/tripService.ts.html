@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/12</span>
+                <span class='fraction'>12/12</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/7</span>
+                <span class='fraction'>7/7</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/2</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/12</span>
+                <span class='fraction'>12/12</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -125,38 +125,38 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -174,38 +174,38 @@ interface CreateTripResponse {
   data: Trip;
 }
 &nbsp;
-export const tripService = <span class="cstat-no" title="statement not covered" >{</span>
-<span class="fstat-no" title="function not covered" >  as</span>ync createTrip(payload: CreateTripPayload): Promise&lt;Trip&gt; {
-    const response = <span class="cstat-no" title="statement not covered" >await api.post&lt;CreateTripResponse&gt;('/trips', payload);</span>
+export const tripService = {
+  async createTrip(payload: CreateTripPayload): Promise&lt;Trip&gt; {
+    const response = await api.post&lt;CreateTripResponse&gt;('/trips', payload);
 &nbsp;
     // Caso típico del backend: { success: true, data: trip }
-<span class="cstat-no" title="statement not covered" >    if ('data' in response.data) {</span>
-<span class="cstat-no" title="statement not covered" >      return response.data.data;</span>
+    if ('data' in response.data) {
+      return response.data.data;
     }
 &nbsp;
     // Fallback (por si el backend cambiara)
-<span class="cstat-no" title="statement not covered" >    return response.data as unknown as Trip;</span>
+    return response.data as unknown as Trip;
   },
 &nbsp;
-<span class="fstat-no" title="function not covered" >  as</span>ync listTrips(filters: TripFilters = <span class="branch-0 cbranch-no" title="branch not covered" >{})</span>: Promise&lt;Trip[]&gt; {
-    const response = <span class="cstat-no" title="statement not covered" >await api.get&lt;TripsResponse | Trip[]&gt;('/trips', {</span>
+  async listTrips(filters: TripFilters = {}): Promise&lt;Trip[]&gt; {
+    const response = await api.get&lt;TripsResponse | Trip[]&gt;('/trips', {
       params: filters,
     });
 &nbsp;
-    const payload = <span class="cstat-no" title="statement not covered" >response.data;</span>
+    const payload = response.data;
 &nbsp;
     // Caso 1: el backend devuelve solo un arreglo
-<span class="cstat-no" title="statement not covered" >    if (Array.isArray(payload)) {</span>
-<span class="cstat-no" title="statement not covered" >      return payload;</span>
+    if (Array.isArray(payload)) {
+      return payload;
     }
 &nbsp;
     // Caso 2: backend devuelve { success, data }
-<span class="cstat-no" title="statement not covered" >    if ('data' in payload) {</span>
-<span class="cstat-no" title="statement not covered" >      return payload.data;</span>
+    if ('data' in payload) {
+      return payload.data;
     }
 &nbsp;
     // Fallback defensivo
-<span class="cstat-no" title="statement not covered" >    return [];</span>
+    return [];
   },
 };
 &nbsp;
@@ -217,7 +217,7 @@ export default tripService;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-12-06T15:22:44.021Z
+                at 2025-12-07T19:23:59.770Z
             </div>
         <script src="../prettify.js"></script>
         <script>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1765034564121" clover="3.2.0">
-  <project timestamp="1765034564121" name="All files">
-    <metrics statements="549" coveredstatements="44" conditionals="356" coveredconditionals="17" methods="140" coveredmethods="12" elements="1045" coveredelements="73" complexity="0" loc="549" ncloc="549" packages="8" files="22" classes="22"/>
+<coverage generated="1765135439864" clover="3.2.0">
+  <project timestamp="1765135439864" name="All files">
+    <metrics statements="549" coveredstatements="89" conditionals="356" coveredconditionals="40" methods="140" coveredmethods="22" elements="1045" coveredelements="151" complexity="0" loc="549" ncloc="549" packages="8" files="22" classes="22"/>
     <package name="components">
       <metrics statements="46" coveredstatements="1" conditionals="58" coveredconditionals="0" methods="9" coveredmethods="0"/>
       <file name="DateInput.tsx" path="/home/mluisaprado/software-frontend/src/components/DateInput.tsx">
@@ -500,12 +500,12 @@
       </file>
     </package>
     <package name="services">
-      <metrics statements="90" coveredstatements="31" conditionals="52" coveredconditionals="11" methods="20" coveredmethods="6"/>
+      <metrics statements="90" coveredstatements="76" conditionals="52" coveredconditionals="34" methods="20" coveredmethods="16"/>
       <file name="apiClient.ts" path="/home/mluisaprado/software-frontend/src/services/apiClient.ts">
         <metrics statements="17" coveredstatements="4" conditionals="8" coveredconditionals="2" methods="4" coveredmethods="0"/>
-        <line num="5" count="1" type="cond" truecount="2" falsecount="0"/>
-        <line num="7" count="1" type="stmt"/>
-        <line num="15" count="1" type="stmt"/>
+        <line num="5" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="7" count="4" type="stmt"/>
+        <line num="15" count="4" type="stmt"/>
         <line num="17" count="0" type="stmt"/>
         <line num="18" count="0" type="stmt"/>
         <line num="20" count="0" type="cond" truecount="0" falsecount="2"/>
@@ -515,7 +515,7 @@
         <line num="27" count="0" type="stmt"/>
         <line num="29" count="0" type="stmt"/>
         <line num="32" count="0" type="stmt"/>
-        <line num="36" count="1" type="stmt"/>
+        <line num="36" count="4" type="stmt"/>
         <line num="37" count="0" type="stmt"/>
         <line num="39" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="40" count="0" type="stmt"/>
@@ -553,58 +553,58 @@
         <line num="73" count="1" type="stmt"/>
       </file>
       <file name="messageService.ts" path="/home/mluisaprado/software-frontend/src/services/messageService.ts">
-        <metrics statements="10" coveredstatements="0" conditionals="6" coveredconditionals="0" methods="2" coveredmethods="0"/>
-        <line num="26" count="0" type="stmt"/>
-        <line num="30" count="0" type="stmt"/>
-        <line num="33" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="34" count="0" type="stmt"/>
-        <line num="38" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="39" count="0" type="stmt"/>
-        <line num="42" count="0" type="stmt"/>
-        <line num="50" count="0" type="stmt"/>
-        <line num="56" count="0" type="stmt"/>
-        <line num="57" count="0" type="cond" truecount="0" falsecount="2"/>
+        <metrics statements="10" coveredstatements="10" conditionals="6" coveredconditionals="6" methods="2" coveredmethods="2"/>
+        <line num="26" count="5" type="stmt"/>
+        <line num="30" count="4" type="stmt"/>
+        <line num="33" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="34" count="1" type="stmt"/>
+        <line num="38" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="39" count="1" type="stmt"/>
+        <line num="42" count="2" type="stmt"/>
+        <line num="50" count="5" type="stmt"/>
+        <line num="56" count="4" type="stmt"/>
+        <line num="57" count="4" type="cond" truecount="2" falsecount="0"/>
       </file>
       <file name="reservationService.ts" path="/home/mluisaprado/software-frontend/src/services/reservationService.ts">
-        <metrics statements="23" coveredstatements="0" conditionals="10" coveredconditionals="0" methods="6" coveredmethods="0"/>
-        <line num="6" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="9" count="0" type="stmt"/>
-        <line num="10" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="14" count="0" type="stmt"/>
-        <line num="16" count="0" type="stmt"/>
-        <line num="22" count="0" type="stmt"/>
-        <line num="26" count="0" type="stmt"/>
-        <line num="28" count="0" type="stmt"/>
-        <line num="34" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="38" count="0" type="stmt"/>
-        <line num="40" count="0" type="stmt"/>
-        <line num="46" count="0" type="stmt"/>
-        <line num="50" count="0" type="stmt"/>
-        <line num="52" count="0" type="stmt"/>
-        <line num="58" count="0" type="stmt"/>
-        <line num="86" count="0" type="stmt"/>
-        <line num="88" count="0" type="stmt"/>
-        <line num="93" count="0" type="stmt"/>
-        <line num="95" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="96" count="0" type="stmt"/>
-        <line num="99" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="100" count="0" type="stmt"/>
-        <line num="103" count="0" type="stmt"/>
+        <metrics statements="23" coveredstatements="23" conditionals="10" coveredconditionals="10" methods="6" coveredmethods="6"/>
+        <line num="6" count="1" type="cond" truecount="2" falsecount="0"/>
+        <line num="9" count="16" type="stmt"/>
+        <line num="10" count="16" type="cond" truecount="2" falsecount="0"/>
+        <line num="14" count="4" type="stmt"/>
+        <line num="16" count="4" type="stmt"/>
+        <line num="22" count="3" type="stmt"/>
+        <line num="26" count="3" type="stmt"/>
+        <line num="28" count="3" type="stmt"/>
+        <line num="34" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="38" count="3" type="stmt"/>
+        <line num="40" count="3" type="stmt"/>
+        <line num="46" count="2" type="stmt"/>
+        <line num="50" count="2" type="stmt"/>
+        <line num="52" count="2" type="stmt"/>
+        <line num="58" count="1" type="stmt"/>
+        <line num="86" count="4" type="stmt"/>
+        <line num="88" count="4" type="stmt"/>
+        <line num="93" count="3" type="stmt"/>
+        <line num="95" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="96" count="1" type="stmt"/>
+        <line num="99" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="100" count="1" type="stmt"/>
+        <line num="103" count="1" type="stmt"/>
       </file>
       <file name="tripService.ts" path="/home/mluisaprado/software-frontend/src/services/tripService.ts">
-        <metrics statements="12" coveredstatements="0" conditionals="7" coveredconditionals="0" methods="2" coveredmethods="0"/>
-        <line num="14" count="0" type="stmt"/>
-        <line num="16" count="0" type="stmt"/>
-        <line num="19" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="20" count="0" type="stmt"/>
-        <line num="24" count="0" type="stmt"/>
-        <line num="28" count="0" type="stmt"/>
-        <line num="32" count="0" type="stmt"/>
-        <line num="35" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="36" count="0" type="stmt"/>
-        <line num="40" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="41" count="0" type="stmt"/>
-        <line num="45" count="0" type="stmt"/>
+        <metrics statements="12" coveredstatements="12" conditionals="7" coveredconditionals="7" methods="2" coveredmethods="2"/>
+        <line num="14" count="1" type="stmt"/>
+        <line num="16" count="3" type="stmt"/>
+        <line num="19" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="20" count="1" type="stmt"/>
+        <line num="24" count="1" type="stmt"/>
+        <line num="28" count="6" type="stmt"/>
+        <line num="32" count="5" type="stmt"/>
+        <line num="35" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="36" count="2" type="stmt"/>
+        <line num="40" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="41" count="1" type="stmt"/>
+        <line num="45" count="2" type="stmt"/>
       </file>
     </package>
     <package name="theme">
@@ -627,15 +627,15 @@
       <metrics statements="12" coveredstatements="12" conditionals="12" coveredconditionals="6" methods="6" coveredmethods="6"/>
       <file name="storage.ts" path="/home/mluisaprado/software-frontend/src/utils/storage.ts">
         <metrics statements="12" coveredstatements="12" conditionals="12" coveredconditionals="6" methods="6" coveredmethods="6"/>
-        <line num="4" count="2" type="stmt"/>
-        <line num="6" count="2" type="stmt"/>
+        <line num="4" count="6" type="stmt"/>
+        <line num="6" count="6" type="stmt"/>
         <line num="8" count="1" type="cond" truecount="1" falsecount="1"/>
         <line num="9" count="1" type="stmt"/>
         <line num="12" count="1" type="cond" truecount="1" falsecount="1"/>
         <line num="13" count="1" type="stmt"/>
         <line num="16" count="1" type="cond" truecount="1" falsecount="1"/>
         <line num="17" count="1" type="stmt"/>
-        <line num="21" count="2" type="stmt"/>
+        <line num="21" count="6" type="stmt"/>
         <line num="23" count="1" type="cond" truecount="1" falsecount="1"/>
         <line num="25" count="1" type="cond" truecount="1" falsecount="1"/>
         <line num="27" count="1" type="cond" truecount="1" falsecount="1"/>
