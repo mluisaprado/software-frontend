@@ -1,5 +1,7 @@
 import { LoginCredentials, RegisterCredentials, AuthResponse } from '../types/auth.types';
 import api from './apiClient';
+import storage from '../utils/storage';
+import { API_BASE_URL } from './apiClient';
 
 const normalizeAuthResponse = (payload: any): AuthResponse => {
   const token =
@@ -71,6 +73,36 @@ export const authService = {
       return true;
     } catch (error) {
       return false;
+    }
+  },
+
+  // Método para subir foto de perfil
+  async uploadProfilePicture(file: File | Blob): Promise<{ profile_picture: string }> {
+    try {
+      const token = await storage.getItem('authToken');
+      const formData = new FormData();
+      formData.append('profile_picture', file);
+
+      const response = await fetch(`${API_BASE_URL}/auth/profile-picture`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData?.message || 'Error al subir la foto de perfil');
+      }
+
+      const data = await response.json();
+      // El backend devuelve { data: { profile_picture: "/uploads/profile-pictures/..." } }
+      return {
+        profile_picture: data?.data?.profile_picture || data?.profile_picture || '',
+      };
+    } catch (error: any) {
+      throw new Error(error?.message || 'Error al subir la foto de perfil');
     }
   },
 };

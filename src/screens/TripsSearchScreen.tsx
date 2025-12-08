@@ -9,7 +9,6 @@ import {
   FormControl,
   Input,
   Button,
-  Select,
   Spinner,
   useToast,
   Badge,
@@ -41,7 +40,13 @@ export default function TripsSearchScreen() {
         )
       ) as TripFilters;
 
-      const data = await tripService.listTrips(cleanedFilters);
+      // Siempre buscar solo viajes publicados
+      const filtersWithStatus = {
+        ...cleanedFilters,
+        status: 'published' as const,
+      };
+
+      const data = await tripService.listTrips(filtersWithStatus);
       setTrips(data);
     } catch (error: any) {
       toast.show({
@@ -175,7 +180,7 @@ export default function TripsSearchScreen() {
         <Heading size="lg" color="neutral.900">
           Buscar viajes
         </Heading>
-        <Text color="neutral.500">Filtra por origen, destino, fecha o estado.</Text>
+        <Text color="neutral.500">Filtra por origen, destino o fecha.</Text>
       </Box>
 
       <Box px={6} mb={4}>
@@ -183,7 +188,7 @@ export default function TripsSearchScreen() {
           <FormControl>
             <FormControl.Label>Origen</FormControl.Label>
             <Input
-              placeholder="Ej. Lima"
+              placeholder="Ej. San Joaquín"
               value={filters.origin ?? ''}
               onChangeText={(value) => handleFilterChange('origin', value)}
               autoCapitalize="words"
@@ -193,41 +198,24 @@ export default function TripsSearchScreen() {
           <FormControl>
             <FormControl.Label>Destino</FormControl.Label>
             <Input
-              placeholder="Ej. Cusco"
+              placeholder="Ej. Cerro Manquehue"
               value={filters.destination ?? ''}
               onChangeText={(value) => handleFilterChange('destination', value)}
               autoCapitalize="words"
             />
           </FormControl>
 
-          <HStack space={4}>
-            <FormControl flex={1}>
-              <FormControl.Label>Fecha</FormControl.Label>
-              <DateInput
-                mode="date"
-                value={filters.date ? `${filters.date}T00:00:00` : undefined}
-                placeholder="Selecciona una fecha"
-                onChange={(date) =>
-                  handleFilterChange('date', date.toISOString().slice(0, 10))
-                }
-              />
-            </FormControl>
-
-            <FormControl flex={1}>
-              <FormControl.Label>Estado</FormControl.Label>
-              <Select
-                selectedValue={filters.status ?? 'published'}
-                onValueChange={(value) => handleFilterChange('status', value)}
-                accessibilityLabel="Estado del viaje"
-              >
-                <Select.Item label="Publicado" value="published" />
-                <Select.Item label="Borrador" value="draft" />
-                <Select.Item label="Completado" value="completed" />
-                <Select.Item label="Cancelado" value="cancelled" />
-                <Select.Item label="Todos" value="" />
-              </Select>
-            </FormControl>
-          </HStack>
+          <FormControl>
+            <FormControl.Label>Fecha</FormControl.Label>
+            <DateInput
+              mode="date"
+              value={filters.date ? `${filters.date}T00:00:00` : undefined}
+              placeholder="Selecciona una fecha"
+              onChange={(date) =>
+                handleFilterChange('date', date.toISOString().slice(0, 10))
+              }
+            />
+          </FormControl>
 
           <Button
             bg="primary.600"
