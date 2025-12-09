@@ -18,6 +18,9 @@ import { authService } from '../services/authService';
 import { API_BASE_URL } from '../services/apiClient';
 import { useNavigation } from '@react-navigation/native';
 import storage from '../utils/storage';
+import MyPastTripsScreen from "../screens/MyPastTripsScreen";
+import RateReservationScreen from "../screens/RateReservationScreen";
+
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -138,12 +141,22 @@ function AppStackNavigator() {
         options={{ title: 'Próximos viajes' }}
       />
 
-
-
       <AppStack.Screen
         name="Chat"
         component={ChatScreen}
         options={{ title: 'Chat' }}
+      />
+
+      <AppStack.Screen
+        name="MyPastTrips"
+        component={MyPastTripsScreen}
+        options={{ title: "Historial de viajes" }}
+      />
+
+      <AppStack.Screen
+        name="RateReservation"
+        component={RateReservationScreen}
+        options={{ title: "Calificar viaje" }}
       />
     </AppStack.Navigator>
 
@@ -386,6 +399,22 @@ function AccountScreen() {
           Próximos viajes
         </Text>
       </TouchableOpacity>
+
+    <TouchableOpacity
+      style={{
+        backgroundColor: "#f59e0b", // amarillo
+        borderRadius: 12,
+        paddingVertical: 12,
+        paddingHorizontal: 32,
+        marginBottom: 12,
+      }}
+      onPress={() => navigation.navigate("MyPastTrips")}
+    >
+      <Text style={{ color: "white", fontWeight: "600" }}>
+        Historial de viajes
+      </Text>
+    </TouchableOpacity>
+
 
       {/* Botón logout */}
       <TouchableOpacity

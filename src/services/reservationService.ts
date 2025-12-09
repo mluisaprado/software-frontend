@@ -1,70 +1,43 @@
 // src/services/reservationService.ts
-import axios from 'axios';
-import storage from '../utils/storage';
+import apiClient from "./apiClient";
 
-const API_BASE_URL =
-  process.env.VITE_BACKEND_URL || 'http://localhost:3000/api';
-
-async function getAuthHeaders() {
-  const token = await storage.getItem('authToken');
-  return token ? { Authorization: `Bearer ${token}` } : {};
+/**
+ * Tipos compartidos
+ */
+export interface DriverSummary {
+  id: number;
+  name: string;
+  email: string;
 }
 
-async function reserveTrip(tripId: string | number) {
-  const headers = await getAuthHeaders();
-
-  const response = await axios.post(
-    `${API_BASE_URL}/trips/${tripId}/reservations`,
-    {},
-    { headers }
-  );
-
-  return response.data;
+export interface TripSummary {
+  id: number;
+  origin: string;
+  destination: string;
+  departure_time: string;
+  driver?: DriverSummary;
 }
 
-async function listReservationsForTrip(tripId: string | number) {
-  const headers = await getAuthHeaders();
-
-  const response = await axios.get(
-    `${API_BASE_URL}/trips/${tripId}/reservations`,
-    { headers }
-  );
-
-  // backend responde { success, data: [...] }
-  return response.data.data ?? [];
+export interface ReservationSummary {
+  id: number;
+  status: string;
+  user_id: number;
+  trip_id: number;
+  trip: TripSummary;
 }
 
-async function acceptReservation(reservationId: string | number) {
-  const headers = await getAuthHeaders();
-
-  const response = await axios.patch(
-    `${API_BASE_URL}/reservations/${reservationId}/accept`,
-    {},
-    { headers }
-  );
-
-  return response.data;
-}
-
-async function rejectReservation(reservationId: string | number) {
-  const headers = await getAuthHeaders();
-
-  const response = await axios.patch(
-    `${API_BASE_URL}/reservations/${reservationId}/reject`,
-    {},
-    { headers }
-  );
-
-  return response.data;
+export interface PastTripsResponse {
+  asPassenger: ReservationSummary[];
+  asDriver: any[]; // viajes donde tú manejaste (por ahora no lo usamos tanto)
 }
 
 /**
- * 👇 NUEVO: tipo para usar en MyUpcomingTripsScreen
+ * 👇 Este ya lo tenías: para "Próximos viajes"
  */
 export interface UpcomingReservation {
   id: number;
   status: string;
-  role: 'driver' | 'passenger';
+  role: "driver" | "passenger";
   trip: {
     id: number;
     origin: string;
@@ -79,16 +52,51 @@ export interface UpcomingReservation {
 }
 
 /**
- * 👇 NUEVO: próximos viajes donde soy PASAJERO y la reserva está confirmada
+ * Reservar un viaje
+ */
+async function reserveTrip(tripId: number | string) {
+  const response = await apiClient.post(`/trips/${tripId}/reservations`, {});
+  return response.data;
+}
+
+/**
+ * Listar reservas de un viaje (para el conductor)
+ */
+async function listReservationsForTrip(tripId: number | string) {
+  const response = await apiClient.get(`/trips/${tripId}/reservations`);
+
+  // backend responde { success, data: [...] }
+  return response.data.data ?? [];
+}
+
+/**
+ * Aceptar reserva
+ */
+async function acceptReservation(reservationId: number | string) {
+  const response = await apiClient.patch(
+    `/reservations/${reservationId}/accept`,
+    {}
+  );
+  return response.data;
+}
+
+/**
+ * Rechazar reserva
+ */
+async function rejectReservation(reservationId: number | string) {
+  const response = await apiClient.patch(
+    `/reservations/${reservationId}/reject`,
+    {}
+  );
+  return response.data;
+}
+
+/**
+ * 👇 Próximos viajes (CU6/CU7): ya lo tenías, solo que ahora con apiClient
  * GET /reservations/my-upcoming
  */
 async function listMyUpcomingTrips(): Promise<UpcomingReservation[]> {
-  const headers = await getAuthHeaders();
-
-  const response = await axios.get(
-    `${API_BASE_URL}/reservations/my-upcoming`,
-    { headers }
-  );
+  const response = await apiClient.get("/reservations/my-upcoming");
 
   const payload: any = response.data;
 
@@ -103,11 +111,40 @@ async function listMyUpcomingTrips(): Promise<UpcomingReservation[]> {
   return [];
 }
 
-export default {
+/**
+ * CU9: listar historial de viajes pasados
+ * GET /reservations/my-past
+ */
+async function listMyPastTrips(): Promise<PastTripsResponse> {
+  const response = await apiClient.get("/reservations/my-past");
+  // backend responde { success, data: { asPassenger, asDriver } }
+  return response.data.data as PastTripsResponse;
+}
+
+/**
+ * CU9: calificar viaje (pasajera → conductor)
+ * PATCH /reservations/:id/rate
+ */
+async function rateReservation(
+  reservationId: number,
+  rating: number,
+  comment: string
+) {
+  const response = await apiClient.patch(`/reservations/${reservationId}/rate`, {
+    rating,
+    comment,
+  });
+  return response.data;
+}
+
+const reservationService = {
   reserveTrip,
   listReservationsForTrip,
   acceptReservation,
   rejectReservation,
-  // 👇 acuérdate de exportar también la nueva función
   listMyUpcomingTrips,
+  listMyPastTrips,
+  rateReservation,
 };
+
+export default reservationService;

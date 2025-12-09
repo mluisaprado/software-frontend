@@ -1,3 +1,4 @@
+// src/services/tripService.ts
 import api from './apiClient';
 import { CreateTripPayload, Trip, TripFilters } from '../types/trip.types';
 
